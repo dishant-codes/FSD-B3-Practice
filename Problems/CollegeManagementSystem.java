@@ -219,6 +219,13 @@ public class CollegeManagementSystem {
                     break;
                 case 3: assignCourseToStudent();
                     break;
+                case 4: displayAllStudents();
+                    break;
+                case 5: displayAllTeacher();
+                    break;
+                case 6: displayDepartmentCourses();
+                    break;
+                case 7: choice = 7; 
                 default:
 
                     break;
@@ -270,6 +277,33 @@ public class CollegeManagementSystem {
     }
 
 
+
+    private static void displayAllStudents(){
+        if (students.isEmpty()) {
+            System.out.println("Students not found");
+        }
+        
+        System.out.println("Students in "+csDepart.getDepartmentName()+ " department");
+        
+        for(Student s: students){
+            System.out.println(" "+s);
+        }
+    }
+
+
+    private static void displayAllTeacher(){
+        if (teachers.isEmpty()) {
+            System.out.println("Teachers not found");
+        }
+
+
+         System.out.println("Teachers in "+csDepart.getDepartmentName()+ " department");
+        
+        for(Teacher t: teachers){
+            System.out.println(" "+t);
+        }
+
+    }
 
    
 
