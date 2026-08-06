@@ -171,27 +171,7 @@ public class CollegeManagementSystem {
     private static Scanner sc = new Scanner(System.in);
 
 
-    private static void addStudent(){
-
-            System.out.println("Enter Student ID :");
-            String id = sc.nextLine();
-
-            System.out.println("Enter Name :");
-            String name = sc.nextLine();
-
-
-            int age = readInt("Enter Age: ");
-
-            double marks = readDouble("Enter Marks (0-100):");
-
-
-            Student student = new Student(name, id, age);
-            student.setMarks(marks);
-
-            students.add(student);
-            System.out.println("Student Added Successfully...");
-
-        }
+   
 
     public static void main(String[] args) {
         
@@ -249,6 +229,19 @@ public class CollegeManagementSystem {
     }
 
 
+    private static void addStudent() {
+        System.out.print("Enter Student ID: ");
+        String id = sc.nextLine();
+        System.out.print("Enter Student Name: ");
+        String name = sc.nextLine();
+        int age = readInt("Enter Age: ");
+        double marks = readDouble("Enter Marks (0-100): ");
+ 
+        Student student = new Student(id, name, age);
+        student.setMarks(marks);
+        students.add(student);
+        System.out.println("Student added successfully.");
+    }
 
 
     private static void addTeacher(){
@@ -406,8 +399,4 @@ public class CollegeManagementSystem {
 
         return value;
     }
-
-
-
-
 }
