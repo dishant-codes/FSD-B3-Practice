@@ -72,10 +72,7 @@ public class MyArrayList {
             newArray[i] = elements[i];
         }
 
-
-
         elements = newArray;
-
     }
 
 }
