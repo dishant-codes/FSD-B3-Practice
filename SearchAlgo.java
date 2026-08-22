@@ -37,10 +37,12 @@ public class SearchAlgo {
             if (arr[mid] > key) {
                 last = mid-1;
             }
+          
 
             if (arr[mid] < key) {
                 first = mid + 1;
             }
+            
             
         }
         if (found != -1) {
@@ -56,10 +58,10 @@ public class SearchAlgo {
 
     public static void main(String[] args) {
         
-        int[] arr = {10, 20, 5, 6, 50};
+        int[] arr = {1, 24, 67, 32, 10, 5};;
 
         // linearSearch(arr, 6);
-        binarySearch(arr, 6);
+        binarySearch(arr, 10);
 
 
     }
