@@ -1,0 +1,19 @@
+
+Java 
+ Arrays
+    - Array is Collection Similar Data Type Values where each element is represent by index and we can access element using their index starting from 0 and last element index is length-1. 
+    array stores values in contigues memory.
+
+    - Examples,
+
+        DataType[] name = new DataType[size];
+
+        
+
+ Methods
+ Strings 
+ OOPs
+
+DSA
+ LinkedList
+ Stacks

@@ -12,6 +12,7 @@ class MyLinkedList{
 
 
     Node head;
+    int size;
 
     public void insertAtBegin(int data){        
         Node newNode = new Node(data); // 20->null
@@ -24,6 +25,7 @@ class MyLinkedList{
 
         // head = 20 -> 10 -> 30 -> 40 -> null
         head = newNode;
+        size++;
     }
 
 
@@ -43,16 +45,14 @@ class MyLinkedList{
         while(temp != null){
             
             //  temp-> 10 -> 30 -> 40 -> null 
-              // 10 == key
-
-            
-            
+              // 10 == key            
               //    30 == key
             if (temp.next.data == key) {
                 temp.next = temp.next.next;
 
                 // temp -> 10 -> 30 -> 40 -> null  
                 // 10 -> 40 -> null
+                size--;
                 return;
             }
             
@@ -75,6 +75,35 @@ class MyLinkedList{
 
     }
 
+
+    public boolean contains(int data){
+        Node current = head;
+        while (current != null) { 
+            if (current.data == data) {
+                return true;
+            }
+
+            current = current.next; 
+        }
+        return false;
+    }
+
+
+    public int get(int index){
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid Index");
+        }
+        Node current = head;
+
+        for(int i = 0; i < index; i++){
+            current = current.next;
+        }
+        return current.data;
+    }
+
+
+
+
     public static void main(String[] args) {
     
         MyLinkedList list = new MyLinkedList();
@@ -91,6 +120,16 @@ class MyLinkedList{
         System.out.println();
 
         list.display();
+
+        System.out.println();
+
+        System.out.println(list.contains(40));
+
+        // 70 -> 60 -> 50 -> 40 -> 30
+        //   0     1    2     3
+        //  70 -> 60 -> 40 -> 30
+
+        System.out.println(list.get(5));
     
     }
 }
