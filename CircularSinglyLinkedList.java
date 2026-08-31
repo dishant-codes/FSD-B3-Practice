@@ -31,5 +31,23 @@ public class CircularSinglyLinkedList {
         newNode.next = head; 
     }
 
+    
+    void display(){
+
+        CSNode curr = head;
+
+        if (curr.next == head) {
+            System.out.print(curr.data+ " -> ");
+        }
+
+        while (curr.next != head) {
+            System.out.print(curr.data+" -> ");
+            curr = curr.next;
+        }
+
+        System.out.print("head");
+
+    }
+
 
 }
