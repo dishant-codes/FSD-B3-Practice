@@ -1,6 +1,4 @@
-class MyLinkedList{
-
-    class Node{
+class Node{
         public int data;
         Node next;
 
@@ -9,6 +7,10 @@ class MyLinkedList{
             this.next = null;
         }
     }
+
+class MyLinkedList{
+
+    
 
 
     Node head;
@@ -102,6 +104,25 @@ class MyLinkedList{
     }
 
 
+    public Node reverseList(Node head){
+
+        // Base case
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // Recursive Call
+        Node newHead = reverseList(head.next);
+
+        // Reversal Step
+        head.next.next = head;
+
+        head.next = null;
+
+        return newHead;
+    }
+
+
 
 
     public static void main(String[] args) {
@@ -123,13 +144,18 @@ class MyLinkedList{
 
         System.out.println();
 
-        System.out.println(list.contains(40));
+        // System.out.println(list.contains(40));
 
         // 70 -> 60 -> 50 -> 40 -> 30
         //   0     1    2     3
         //  70 -> 60 -> 40 -> 30
 
-        System.out.println(list.get(5));
+        // System.out.println(list.get(5));
+        
+
+        Node reverse =  
+
+
     
     }
 }

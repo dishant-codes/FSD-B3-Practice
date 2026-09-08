@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Tower of Hanoi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 { color: #333; }
+        .controls {
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover { background-color: #004494; }
+        
+        /* Game Board Setup */
+        .board {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 300px;
+            gap: 50px;
+            margin-top: 50px;
+            padding-bottom: 20px;
+            border-bottom: 10px solid #654321;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .peg-container {
+            display: flex;
+            flex-direction: column-reverse; /* Stacks items from bottom to top */
+            align-items: center;
+            width: 150px;
+            height: 250px;
+            position: relative;
+        }
+        /* The Peg itself */
+        .peg-container::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 15px;
+            height: 250px;
+            background-color: #8b5a2b;
+            border-radius: 10px 10px 0 0;
+            z-index: 0;
+        }
+        .peg-label {
+            position: absolute;
+            bottom: -40px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* Disks */
+        .disk {
+            height: 30px;
+            border-radius: 15px;
+            margin-top: 2px;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 30px;
+            transition: all 0.3s ease;
+        }
+        .disk-1 { width: 50px; background-color: #ff4757; }
+        .disk-2 { width: 90px; background-color: #ffa502; }
+        .disk-3 { width: 130px; background-color: #2ed573; }
+        
+        #status {
+            margin-top: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            min-height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tower of Hanoi Representation</h1>
+    
+    <div class="controls">
+        <button onclick="startAnimation()">Solve Puzzle</button>
+    </div>
+
+    <div class="board">
+        <div class="peg-container" id="peg-A">
+            <div class="peg-label">Peg A (Source)</div>
+            <div class="disk disk-3" id="disk-3">3</div>
+            <div class="disk disk-2" id="disk-2">2</div>
+            <div class="disk disk-1" id="disk-1">1</div>
+        </div>
+        
+        <div class="peg-container" id="peg-B">
+            <div class="peg-label">Peg B (Auxiliary)</div>
+        </div>
+        
+        <div class="peg-container" id="peg-C">
+            <div class="peg-label">Peg C (Target)</div>
+        </div>
+    </div>
+
+    <div id="status">Ready to solve...</div>
+
+    <script>
+        // Array to store the sequence of moves
+        let movesQueue = [];
+        let isAnimating = false;
+
+        // The core recursive algorithm
+        function calculateHanoiMoves(n, source, auxiliary, target) {
+            if (n === 0) {
+                return; // Base case: no disks to move
+            }
+            
+            // Step 1: Move n-1 disks from source to auxiliary
+            calculateHanoiMoves(n - 1, source, target, auxiliary);
+            
+            // Step 2: Move the nth disk from source to target
+            movesQueue.push({ disk: n, from: source, to: target });
+            
+            // Step 3: Move n-1 disks from auxiliary to target
+            calculateHanoiMoves(n - 1, auxiliary, source, target);
+        }
+
+        // Function to handle the visualization of moves
+        function startAnimation() {
+            if (isAnimating) return; // Prevent multiple clicks
+            isAnimating = true;
+            
+            // Reset state in case it's run multiple times
+            resetBoard();
+            movesQueue = [];
+            
+            // Calculate moves for 3 disks
+            calculateHanoiMoves(3, 'A', 'B', 'C');
+            
+            // Start executing moves visually
+            executeNextMove();
+        }
+
+        function executeNextMove() {
+            if (movesQueue.length === 0) {
+                document.getElementById('status').innerText = "Puzzle Solved!";
+                isAnimating = false;
+                return;
+            }
+
+            // Get the next move from the queue
+            const move = movesQueue.shift();
+            
+            // Update UI Text
+            document.getElementById('status').innerText = 
+                `Moving Disk ${move.disk} from Peg ${move.from} to Peg ${move.to}`;
+
+            // Perform DOM manipulation to move the disk visually
+            const diskElement = document.getElementById(`disk-${move.disk}`);
+            const targetPegElement = document.getElementById(`peg-${move.to}`);
+            
+            // The flex column-reverse setup automatically stacks it correctly 
+            // when we append it to the new peg container
+            targetPegElement.appendChild(diskElement);
+
+            // Wait 1 second before executing the next move to create an animation effect
+            setTimeout(executeNextMove, 1000);
+        }
+
+        function resetBoard() {
+            const pegA = document.getElementById('peg-A');
+            pegA.appendChild(document.getElementById('disk-3'));
+            pegA.appendChild(document.getElementById('disk-2'));
+            pegA.appendChild(document.getElementById('disk-1'));
+            document.getElementById('status').innerText = "Ready to solve...";
+        }
+    </script>
+</body>
+</html>

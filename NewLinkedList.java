@@ -1,18 +1,14 @@
 
 class Node {
-
     int data;
     Node next;
-
     public Node(int data) {
         this.data = data;
         this.next = null;
     }
-
 }
 
 class NewLinkedList {
-
     Node head;
 
     public NewLinkedList() {
@@ -20,7 +16,6 @@ class NewLinkedList {
     }
 
     public void insertAtBeginning(int data) {
-        
         Node newNode = new Node(data);
         newNode.next = head;
         head = newNode;
@@ -61,6 +56,28 @@ class NewLinkedList {
 
     }
 
+
+    public void reverseList(){
+
+        Node current = head;
+        Node prev = null;
+
+        while (current != null) {
+            Node newNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = newNode;
+        }
+
+
+
+        while (prev != null) {
+            System.out.print(prev.data + " -> ");
+            prev = prev.next;
+        }
+        
+    }
+
     public static void main(String[] args) {
         NewLinkedList ll = new NewLinkedList();
 
@@ -68,21 +85,18 @@ class NewLinkedList {
         ll.insertAtBeginning(20);
         ll.insertAtBeginning(30);
         ll.insertAtBeginning(40);
-        ll.insertAtBeginning(23);
-        ll.insertAtBeginning(22);
-        ll.insertAtBeginning(17);
-        ll.insertAtBeginning(13);
-        ll.insertAtBeginning(25);
-        ll.insertAtBeginning(16);
-        ll.insertAtBeginning(7);
 
-        ll.displayList();
+        // ll.displayList();
 
         // ll.deleteAtBeginning();
-        ll.deleteByKey(13);
+        // ll.deleteByKey(13);
 
-        System.out.println();
+        // System.out.println();
         ll.displayList();
+        
+        System.out.println();
+
+        ll.reverseList();
 
         /// current = 40 -> 30 -> 20 -> 10 - > null current = 30 -> 20 -> 10 - > null
     }
