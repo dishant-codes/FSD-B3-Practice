@@ -57,6 +57,71 @@ class NewLinkedList {
     }
 
 
+
+    public static Node insertionSort(Node head){
+
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        Node dummy = new Node(0);
+        dummy.next = head;
+
+        Node curr = head;
+
+        while (curr != null || curr.next != null) {
+            
+            if (curr.data <= curr.next.data) {
+                    curr = curr.next;
+            }
+            else{
+
+
+                Node toInsert = curr.next;
+
+                //  2 , 3 , 1, 5
+                // toinsert = 1
+                // curr.next = 5
+                //  2, 3, 5 - > null
+
+                // 1
+
+                // dummy -  0 -> 2 -> 3 -> 1 -> 5
+
+                curr.next = toInsert.next;
+
+                Node prev = dummy;
+
+
+                while (prev.next.data < toInsert.data) {
+                    prev = prev.next;
+                }
+
+
+                // 1 -> null
+
+
+                // prev = 0 -> 2 -> 3 -> 1 -> 5
+
+
+                // toInsert = 1 -> 2 -> 3 -> 1 -> 5
+                // prev = 0 -> 1 -> 2 -> 3 -> 1 -> 5
+
+                toInsert.next = prev.next;
+                prev.next = toInsert;
+
+            }
+            
+        }
+
+        
+
+        return dummy.next;
+
+    }
+
+
+
     public void reverseList(){
 
         Node current = head;
@@ -81,10 +146,10 @@ class NewLinkedList {
     public static void main(String[] args) {
         NewLinkedList ll = new NewLinkedList();
 
-        ll.insertAtBeginning(10);
         ll.insertAtBeginning(20);
-        ll.insertAtBeginning(30);
+        ll.insertAtBeginning(10);
         ll.insertAtBeginning(40);
+        ll.insertAtBeginning(30);
 
         // ll.displayList();
 
@@ -97,6 +162,16 @@ class NewLinkedList {
         System.out.println();
 
         ll.reverseList();
+
+        Node sortedList = insertionSort(ll.head);
+
+
+        Node curr = sortedList;
+        while (curr != null) {
+            System.out.print(curr.data+ "-> ");
+            curr = curr.next;
+        }
+        System.out.print("Null");
 
         /// current = 40 -> 30 -> 20 -> 10 - > null current = 30 -> 20 -> 10 - > null
     }
