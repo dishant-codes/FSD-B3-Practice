@@ -1,67 +1,48 @@
-import java.util.Scanner;
+public class MyArrays {
 
-public class myArrays {
-    
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        
+    static void main(String[] args) {
 
-        int[] arr = new int[5]; // default value for all elements are 0
 
-        arr[0] = 30;
-        arr[1] = 40;
-        arr[2] = 50;
-        arr[3] = 60;
-        arr[4] = 70;
-        // arr[5] = 80;
-        
-        for(int item : arr){
-            System.out.println(item);
+//        int[] nums = {20,30,40,50};
+//        System.out.println(nums.length);
+
+
+        int[] nums = new int[4];
+
+        nums[0] = 5;
+        nums[1] = 3;
+        nums[2] = 4;
+        nums[3] = 8;
+
+//        [0, 0, 0, 0]
+
+        // Searching Value in Array
+        int key = 4;
+        for (int i = 0; i< nums.length; i++){
+            if (nums[i] == key){
+                System.out.println("Index "+i);
+            }
         }
 
 
-        // 2D Array 
-
-        // 2 5 7 8
-        // 5 1 0 9
-        // 1 2 4 6
-        // int[][] matrix = new int[3][4];
-        int[][] matrix;
-
-        int rows;
-        int cols;
-
-        System.out.println("Enter Number of Rows");
-        rows = scan.nextInt();
-
-        System.out.println("Enter number of Colomns");
-        cols = scan.nextInt();
-
-        matrix = new int[rows][cols];
+        // Sum of all element present in array
+        int sum=0;
+        for (int i = 0; i< nums.length; i++){
+            sum += nums[i];
+        }
+        System.out.println("Sum of all array elements is "+sum);
 
 
-        for(int i = 0; i < matrix.length; i++){
-            
-            for(int j = 0; j < matrix[i].length; j++){
-                
-                System.out.println("Enter Value for "+j+" in "+i+" = ");
-                matrix[i][j] = scan.nextInt();
-
-            }
-
-        } 
-
-        
+//        System.out.println("Index 0 "+ (nums[0] == key));
+//        System.out.println("Index 1 "+ (nums[1] == key));
+//        System.out.println("Index 2 "+ (nums[2] == key));
+//        System.out.println("Index 3 "+ (nums[3] == key));
 
 
-        for(int i = 0; i < matrix.length; i++){
-            
-            for(int j = 0; j < matrix[i].length; j++){
-                System.out.print(matrix[i][j]+" ");
-            }
 
-            System.out.println("");
-        } 
+
+        // Create Result Calculator (required: subject marks, percentage, total marks, grade)
+
 
 
     }
