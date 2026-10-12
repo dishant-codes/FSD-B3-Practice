@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        h3, h2{
+            text-align: center;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+    <h3>Digital Clock</h3>
+    <h2 id="time">H:M:S</h2>
+
+
+    <script>
+        const time = document.getElementById("time");
+
+        setInterval(()=>{
+
+        const date = new Date();
+        const hour = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        time.innerHTML = hour+":"+minutes+":"+seconds;
+        
+
+        },1000)
+
+       
+        
+    </script>
+
+
+    
+</body>
+</html>
