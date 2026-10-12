@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRUTAL // DIGITAL CLOCK</title>
+    <style>
+        :root {
+            --bg: #f4efe6;
+            --surface: #ffffff;
+            --accent: #ffe600;
+            --accent-alt: #ff5e5e;
+            --accent-cyan: #00f0ff;
+            --accent-green: #00e575;
+            --ink: #000000;
+            --border-w: 3px;
+            --shadow-d: 6px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --accent: #ffea00;
+            --accent-alt: #ff3366;
+            --accent-cyan: #00ffff;
+            --accent-green: #00ff66;
+            --ink: #ffffff;
+        }
+
+        [data-theme="dark"] body {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(#333 1px, transparent 1px);
+        }
+
+        [data-theme="dark"] .brutal-box,
+        [data-theme="dark"] .time-block,
+        [data-theme="dark"] .btn,
+        [data-theme="dark"] .badge {
+            border-color: #ffffff;
+            box-shadow: var(--shadow-d) var(--shadow-d) 0px #ffffff;
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .window-header {
+            border-bottom-color: #ffffff;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        [data-theme="dark"] .window-btn {
+            border-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--bg);
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+            background-size: 24px 24px;
+            font-family: 'Courier New', Courier, monospace, monospace;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            transition: background 0.15s ease;
+        }
+
+        .clock-wrapper {
+            width: 100%;
+            max-width: 760px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Brutalist Window Frame */
+        .brutal-box {
+            background: var(--surface);
+            border: var(--border-w) solid var(--ink);
+            box-shadow: var(--shadow-d) var(--shadow-d) 0px var(--ink);
+            position: relative;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .window-header {
+            background: var(--accent);
+            border-bottom: var(--border-w) solid var(--ink);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .window-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-green);
+            border: 2px solid var(--ink);
+            display: inline-block;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .window-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-btn {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--ink);
+            background: #fff;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .window-btn:nth-child(1) { background: var(--accent-cyan); }
+        .window-btn:nth-child(2) { background: var(--accent); }
+        .window-btn:nth-child(3) { background: var(--accent-alt); }
+
+        .clock-content {
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Top Sub-Bar with Date and Tags */
+        .telemetry-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="dark"] .telemetry-bar {
+            border-bottom-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            font-weight: 800;
+            font-size: 0.78rem;
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0px var(--ink);
+            background: var(--surface);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-accent {
+            background: var(--accent-cyan);
+        }
+
+        .badge-alert {
+            background: var(--accent-alt);
+            color: #fff;
+        }
+
+        /* Primary Time Blocks */
+        .time-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+
+        .time-block {
+            flex: 1;
+            min-width: 0;
+            background: var(--surface);
+            border: var(--border-w) solid var(--ink);
+            box-shadow: 4px 4px 0px var(--ink);
+            padding: 16px 8px;
+            text-align: center;
+            position: relative;
+        }
+
+        .time-num {
+            font-family: 'Courier New', monospace;
+            font-size: clamp(2.4rem, 7vw, 4.8rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -1px;
+            display: block;
+        }
+
+        .time-label {
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 8px;
+            display: block;
+            opacity: 0.75;
+        }
+
+        .time-colon {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            animation: blink 1s steps(1) infinite;
+            user-select: none;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.15; }
+        }
+
+        .period-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .period-tag {
+            font-size: 0.85rem;
+            font-weight: 900;
+            padding: 6px 10px;
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0px var(--ink);
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .period-tag.active {
+            background: var(--accent);
+        }
+
+        /* Progress Bar (Seconds Ticker) */
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .progress-track {
+            height: 16px;
+            border: 2px solid var(--ink);
+            background: var(--surface);
+            box-shadow: 2px 2px 0px var(--ink);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-green);
+            width: 0%;
+            border-right: 2px solid var(--ink);
+            transition: width 0.25s linear;
+        }
+
+        /* Controls Section */
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 16px;
+            border: var(--border-w) solid var(--ink);
+            background: var(--surface);
+            color: var(--ink);
+            box-shadow: 3px 3px 0px var(--ink);
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.1s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--ink);
+        }
+
+        .btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--ink);
+        }
+
+        .btn-accent {
+            background: var(--accent-cyan);
+        }
+
+        /* Hidden standard element for JS compatibility */
+        #time {
+            display: none;
+        }
+
+        /* Footer Telemetry strip */
+        .footer-strip {
+            background: var(--ink);
+            color: var(--surface);
+            padding: 8px 16px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        [data-theme="dark"] .footer-strip {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        @media (max-width: 580px) {
+            body {
+                padding: 12px;
+            }
+            .clock-content {
+                padding: 16px 12px;
+                gap: 16px;
+            }
+            .time-display {
+                gap: 6px;
+            }
+            .time-block {
+                padding: 10px 4px;
+            }
+            .time-num {
+                font-size: 2.1rem;
+            }
+            .period-block {
+                gap: 4px;
+            }
+            .period-tag {
+                padding: 3px 6px;
+                font-size: 0.7rem;
+            }
+            .btn {
+                padding: 8px 10px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-wrapper">
+        <!-- Main Brutalist Window Container -->
+        <div class="brutal-box">
+            
+            <!-- Window Title Bar -->
+            <div class="window-header">
+                <div class="window-title">
+                    <span class="status-dot"></span>
+                    <span>SYS//DIGITAL_CLOCK.EXE</span>
+                </div>
+                <div class="window-actions">
+                    <span class="window-btn" title="Minimize"></span>
+                    <span class="window-btn" title="Maximize"></span>
+                    <span class="window-btn" title="Close"></span>
+                </div>
+            </div>
+
+            <div class="clock-content">
+
+                <!-- Telemetry & Date Bar -->
+                <div class="telemetry-bar">
+                    <div class="badge badge-accent" id="date-badge">
+                        DATE: --/--/----
+                    </div>
+                    <div class="badge" id="day-badge">
+                        DAY: ----
+                    </div>
+                    <div class="badge badge-alert">
+                        ● LIVE FEED
+                    </div>
+                </div>
+
+                <!-- Clock Display -->
+                <div class="time-display">
+                    <!-- Hours -->
+                    <div class="time-block">
+                        <span class="time-num" id="hours-display">00</span>
+                        <span class="time-label">HOURS</span>
+                    </div>
+
+                    <div class="time-colon">:</div>
+
+                    <!-- Minutes -->
+                    <div class="time-block">
+                        <span class="time-num" id="minutes-display">00</span>
+                        <span class="time-label">MINUTES</span>
+                    </div>
+
+                    <div class="time-colon">:</div>
+
+                    <!-- Seconds -->
+                    <div class="time-block">
+                        <span class="time-num" id="seconds-display">00</span>
+                        <span class="time-label">SECONDS</span>
+                    </div>
+
+                    <!-- AM/PM indicator for 12h mode -->
+                    <div class="period-block" id="period-container">
+                        <div class="period-tag" id="tag-am">AM</div>
+                        <div class="period-tag" id="tag-pm">PM</div>
+                    </div>
+                </div>
+
+                <!-- Legacy container preserved for backward compatibility -->
+                <h2 id="time">H:M:S</h2>
+
+                <!-- Second Ticker Progress Bar -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span>CYCLE PROGRESS</span>
+                        <span id="cycle-percentage">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="controls-bar">
+                    <div class="btn-group">
+                        <button class="btn" id="format-toggle" type="button">[ 24H MODE ]</button>
+                        <button class="btn btn-accent" id="theme-toggle" type="button">[ THEME: LIGHT ]</button>
+                    </div>
+                    <div class="badge" id="tz-badge">
+                        TZ: UTC
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Status Strip -->
+            <div class="footer-strip">
+                <span>TERMINAL_OUTPUT: OK</span>
+                <span id="timestamp-ms">UNIX_MS: 0000000000000</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let is24HourMode = false;
+        let isDarkTheme = false;
+
+        // Elements
+        const legacyTime = document.getElementById("time");
+        const hoursEl = document.getElementById("hours-display");
+        const minutesEl = document.getElementById("minutes-display");
+        const secondsEl = document.getElementById("seconds-display");
+        const tagAm = document.getElementById("tag-am");
+        const tagPm = document.getElementById("tag-pm");
+        const periodContainer = document.getElementById("period-container");
+        const dateBadge = document.getElementById("date-badge");
+        const dayBadge = document.getElementById("day-badge");
+        const tzBadge = document.getElementById("tz-badge");
+        const progressBar = document.getElementById("progress-bar");
+        const cyclePercentage = document.getElementById("cycle-percentage");
+        const timestampMs = document.getElementById("timestamp-ms");
+        const formatToggleBtn = document.getElementById("format-toggle");
+        const themeToggleBtn = document.getElementById("theme-toggle");
+
+        const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+        function padZero(num) {
+            return String(num).padStart(2, "0");
+        }
+
+        function updateClock() {
+            const date = new Date();
+            let rawHours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            const ms = date.getMilliseconds();
+
+            // Legacy element sync (hour:min:sec)
+            if (legacyTime) {
+                legacyTime.innerHTML = rawHours + ":" + minutes + ":" + seconds;
+            }
+
+            // AM/PM calculation
+            const isPM = rawHours >= 12;
+            let displayHours = rawHours;
+
+            if (!is24HourMode) {
+                displayHours = displayHours % 12;
+                if (displayHours === 0) displayHours = 12;
+                periodContainer.style.display = "flex";
+                if (isPM) {
+                    tagPm.classList.add("active");
+                    tagAm.classList.remove("active");
+                } else {
+                    tagAm.classList.add("active");
+                    tagPm.classList.remove("active");
+                }
+            } else {
+                periodContainer.style.display = "none";
+            }
+
+            // Set digital segments
+            hoursEl.textContent = padZero(displayHours);
+            minutesEl.textContent = padZero(minutes);
+            secondsEl.textContent = padZero(seconds);
+
+            // Date & telemetry
+            const dayName = days[date.getDay()];
+            const monthName = months[date.getMonth()];
+            const dayNum = padZero(date.getDate());
+            const year = date.getFullYear();
+
+            dateBadge.textContent = `DATE: ${dayNum} ${monthName} ${year}`;
+            dayBadge.textContent = `DAY: ${dayName}`;
+
+            // Progress bar
+            const percent = Math.floor((seconds / 60) * 100);
+            progressBar.style.width = ((seconds / 60) * 100) + "%";
+            cyclePercentage.textContent = percent + "%";
+
+            // Timestamp MS
+            timestampMs.textContent = "EPOCH: " + date.getTime();
+        }
+
+        // Initialize timezone badge
+        try {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "LOCAL";
+            tzBadge.textContent = `TZ: ${tz}`;
+        } catch (e) {
+            tzBadge.textContent = "TZ: LOCAL";
+        }
+
+        // Event listeners
+        formatToggleBtn.addEventListener("click", () => {
+            is24HourMode = !is24HourMode;
+            formatToggleBtn.textContent = is24HourMode ? "[ 12H MODE ]" : "[ 24H MODE ]";
+            updateClock();
+        });
+
+        themeToggleBtn.addEventListener("click", () => {
+            isDarkTheme = !isDarkTheme;
+            document.documentElement.setAttribute("data-theme", isDarkTheme ? "dark" : "light");
+            themeToggleBtn.textContent = isDarkTheme ? "[ THEME: DARK ]" : "[ THEME: LIGHT ]";
+        });
+
+        // Run immediately, then tick
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
